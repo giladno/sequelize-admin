@@ -3,14 +3,14 @@
 ## Install
 
 ```
-npm install giladno/sequelize-admin
+npm install @giladno/sequelize-admin
 ```
 
 ## Usage
 
 ```
 const Sequelize = require('sequelize');
-const admin = require('giladno/sequelize-admin');
+const admin = require('@giladno/sequelize-admin');
 
 const sequelize = new Sequelize(...);
 
