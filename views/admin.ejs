@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title><%=title%></title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
+        />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+        <script>
+            $(function() {
+                const models = <%-JSON.stringify(models)%>;
+                $(document).on('click', 'a.dropdown-item[data-model]', function(e) {
+                    e.preventDefault();
+                    let {model} = $(this).data();
+                    $('#navbarDropdownMenuLink').text(model);
+                    $('#tableContainer table').each(function() {
+                        $(this)
+                            .DataTable()
+                            .destroy(true);
+                    });
+                    $('<table class="table">')
+                        .appendTo('#tableContainer')
+                        .DataTable({
+                            pageLength: <%=limit%>,
+                            lengthChange: false,
+                            responsive: true,
+                            processing: true,
+                            serverSide: true,
+                            searching: false,
+                            responsive: true,
+                            paging: true,
+                            ajax: {url: '<%=url%>', type: 'POST', data: {model}},
+                            columns: models[model],
+                        });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-<%=navbar%>" style="background-color: <%=backgroundColor%>;">
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbar-collapse"
+                aria-controls="navbar-collapse"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <% if (logo) { %>
+                <a class="navbar-brand" href="#"><img src="<%=logo%>" height="30"></a>
+            <% } else { %>
+                <a class="navbar-brand" href="#">Sequelize Admin</a>
+            <% } %>
+            <div class="collapse navbar-collapse" id="navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item dropdown">
+                        <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdownMenuLink"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                        >
+                            Select a model...
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                            <% for (let name of Object.keys(models).sort()) { %>
+                                <a class="dropdown-item" data-model="<%=name%>" href="#"><%=name%></a>
+                            <% } %>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ml-md-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/giladno/sequelize-admin"><i class="fa fa-github mr-1"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid" id="tableContainer"></div>
+    </body>
+</html>
