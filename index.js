@@ -107,11 +107,8 @@ module.exports = (
                             case 'JSON':
                                 item[data] = JSON.parse(req.body[data].trim() || 'null');
                                 break;
-                            case 'ENUM':
-                                item[data] = req.body[data] || null;
-                                break;
                             default:
-                                item[data] = req.body[data];
+                                item[data] = req.body[data] || null;
                         }
                         return item;
                     }, {}),
