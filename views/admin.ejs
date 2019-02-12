@@ -20,7 +20,6 @@
             $(function() {
                 const models = <%-JSON.stringify(models)%>;
                 $(document).on('click', 'a.dropdown-item[data-model]', function(e) {
-                    e.preventDefault();
                     let {model} = $(this).data();
                     $('#navbarDropdownMenuLink').text(model);
                     $('#tableContainer table').each(function() {
@@ -43,6 +42,9 @@
                             columns: models[model],
                         });
                 });
+                const [, model] = window.location.hash.split('#');
+                if (model)
+                    $(`a.dropdown-item[data-model="${model}"]`).click();
             });
         </script>
     </head>
@@ -60,9 +62,9 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <% if (logo) { %>
-                <a class="navbar-brand" href="#"><img src="<%=logo%>" height="30"></a>
+            <a class="navbar-brand" href="#"><img src="<%=logo%>" height="30"/></a>
             <% } else { %>
-                <a class="navbar-brand" href="#">Sequelize Admin</a>
+            <a class="navbar-brand" href="#">Sequelize Admin</a>
             <% } %>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="navbar-nav">
@@ -79,14 +81,16 @@
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <% for (let name of Object.keys(models).sort()) { %>
-                                <a class="dropdown-item" data-model="<%=name%>" href="#"><%=name%></a>
+                            <a class="dropdown-item" data-model="<%=name%>" href="#<%=name%>"><%=name%></a>
                             <% } %>
                         </div>
                     </li>
                 </ul>
                 <ul class="navbar-nav ml-md-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="https://github.com/giladno/sequelize-admin"><i class="fa fa-github mr-1"></i></a>
+                        <a class="nav-link" href="https://github.com/giladno/sequelize-admin"
+                            ><i class="fa fa-github mr-1"></i
+                        ></a>
                     </li>
                 </ul>
             </div>
