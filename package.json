@@ -7,7 +7,8 @@
         "node": ">=8"
     },
     "scripts": {
-        "start": "node example/index.js"
+        "start": "node example/index.js",
+        "deploy": "npm publish --access public"
     },
     "repository": {
         "type": "git",
