@@ -32,8 +32,8 @@ module.exports = (
                                     .filter(({type, fieldName}) => {
                                         return (
                                             type.key != 'VIRTUAL' &&
-                                            (!include[name] || ~include[name].indexOf(fieldName)) &&
-                                            (!exclude[name] || !~exclude[name].indexOf(fieldName))
+                                            (!include[name] || include[name].includes(fieldName)) &&
+                                            (!exclude[name] || !exclude[name].includes(fieldName))
                                         );
                                     })
                                     .map(({fieldName}) => ({title: fieldName, data: fieldName})),
