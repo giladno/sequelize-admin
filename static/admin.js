@@ -52,7 +52,7 @@ $(function() {
                 .closest('tr')
                 .data();
             if (!confirm(`Delete item #${id}?`)) return;
-            await $.post(`${url}delete/${id}?model=${model}`);
+            await $.post(`${url}/delete/${id}?model=${model}`);
             reload();
         })
         .on('click', 'button.save', async function() {
@@ -76,7 +76,7 @@ $(function() {
             $(this)
                 .find('.modal-body')
                 .html('<p>Loading...</p>')
-                .load(`${url}edit/${id}?model=${model}`, function() {
+                .load(`${url}/edit/${id}?model=${model}`, function() {
                     $(this)
                         .find('textarea.json')
                         .each(function() {
