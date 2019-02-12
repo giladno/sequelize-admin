@@ -11,44 +11,30 @@
             rel="stylesheet"
             href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
         />
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+            integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr"
+            crossorigin="anonymous"
+        />
+
         <link rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.2/codemirror.min.css" />
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-        <script>
-            $(function() {
-                const models = <%-JSON.stringify(models)%>;
-                $(document).on('click', 'a.dropdown-item[data-model]', function(e) {
-                    let {model} = $(this).data();
-                    $('#navbarDropdownMenuLink').text(model);
-                    $('#tableContainer table').each(function() {
-                        $(this)
-                            .DataTable()
-                            .destroy(true);
-                    });
-                    $('<table class="table">')
-                        .appendTo('#tableContainer')
-                        .DataTable({
-                            pageLength: <%=limit%>,
-                            lengthChange: false,
-                            responsive: true,
-                            processing: true,
-                            serverSide: true,
-                            searching: false,
-                            responsive: true,
-                            paging: true,
-                            ajax: {url: '<%=url%>', type: 'POST', data: {model}},
-                            columns: models[model],
-                        });
-                });
-                const [, model] = window.location.hash.split('#');
-                if (model)
-                    $(`a.dropdown-item[data-model="${model}"]`).click();
-            });
-        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.2/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.42.2/mode/javascript/javascript.min.js"></script>
+        <script src="<%=url%>admin.js"></script>
     </head>
-    <body>
+    <body
+        data-models="<%=JSON.stringify(models)%>"
+        data-limit="<%=limit%>"
+        data-url="<%=url%>"
+        data-deletable="<%=+!!deletable%>"
+        data-editable="<%=+!!editable%>"
+    >
         <nav class="navbar navbar-expand-lg navbar-<%=navbar%>" style="background-color: <%=backgroundColor%>;">
             <button
                 class="navbar-toggler"
@@ -80,7 +66,7 @@
                             Select a model...
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                            <% for (let name of Object.keys(models).sort()) { %>
+                            <% for (const name of Object.keys(models).sort()) { %>
                             <a class="dropdown-item" data-model="<%=name%>" href="#<%=name%>"><%=name%></a>
                             <% } %>
                         </div>
@@ -96,5 +82,22 @@
             </div>
         </nav>
         <div class="container-fluid" id="tableContainer"></div>
+        <div id="edit" class="modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Edit</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary save">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

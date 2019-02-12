@@ -1,0 +1,35 @@
+<form data-url="<%=url%>">
+    <% for (const {title, data, type, options = []} of fields) { %>
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label"><%=title%></label>
+        <div class="col-sm-10">
+            <% if (data=='id') { %>
+            <input value="<%=item[data]%>" class="form-control" readonly />
+            <% } else switch(type) { case 'INTEGER': case 'STRING': case 'CHAR': case 'DECIMAL': %>
+            <input name="<%=data%>" value="<%=item[data]%>" type="text" class="form-control" placeholder="<%=title%>" />
+            <% break; case 'TEXT': %>
+            <textarea name="<%=data%>" class="form-control"><%=item[data]%></textarea>
+            <% break; case 'DATE': %>
+            <input
+                name="<%=data%>"
+                value="<%=item[data] ? item[data].toISOString() : ''%>"
+                type="text"
+                class="form-control"
+                placeholder="<%=title%>"
+            />
+            <% break; case 'JSON': %>
+            <textarea name="<%=data%>" class="form-control json">
+                <%=item[data] ? JSON.stringify(item[data], null, 4) : ''%>
+            </textarea>
+            <% break; case 'ENUM': %>
+            <select name="<%=data%>" class="form-control">
+                <option value="" <%=!item[data] ? 'selected' : ''%>>null</option>
+                <% for (const option of options) { %>
+                <option value="<%=option%>" <%=option==item[data] ? 'selected' : ''%>><%=option%></option>
+                <% } %>
+            </select>
+            <% break; } %>
+        </div>
+    </div>
+    <% } %>
+</form>

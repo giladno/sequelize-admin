@@ -19,7 +19,7 @@ Post.belongsTo(User);
 User.hasMany(Post);
 
 const app = express();
-app.use('/admin', admin(sequelize));
+app.use('/admin', admin(sequelize, {deletable: true, editable: true}));
 app.get('/', (req, res) => res.send('<a href="/admin">Admin</a>'));
 
 (async () => {
