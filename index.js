@@ -69,7 +69,7 @@ module.exports = (
                 where: {},
                 offset: +req.body.start || 0,
                 limit: Math.min(Math.max(+req.body.length || 0, 0), limit),
-                order: req.body.order.map(({column, dir}) => [req.body.columns[+column].data, dir]),
+                order: (req.body.order || []).map(({column, dir}) => [req.body.columns[+column].data, dir]),
             });
             res.json({
                 draw: +req.body.draw || 0,
